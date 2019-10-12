@@ -1,12 +1,19 @@
 package no.example.dialogdimmedbackground
 
+import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.dialog_layout.view.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,9 +22,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        fab.setOnClickListener {
+            /*
+            showGooglePlayAppPage(ba
+                context = this,
+                appId = BuildConfig.APPLICATION_ID
+            )
+             */
+            showGooglePlayAppPage(
+                context = this,
+                appId = "mobi.mobiletech.apps.android.netcom"
+            )
         }
     }
 
@@ -36,4 +51,32 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+
+    private fun showGooglePlayAppPage(context: Context, appId: String) {
+        // create an alert builder
+        val builder = AlertDialog.Builder(context)
+        // set the custom layout
+        val customLayout = View.inflate(context, R.layout.dialog_layout, null)
+        customLayout.appPageButton.setOnClickListener {
+            // Launch Google Play App
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse(
+                    "https://play.google.com/store/apps/details?id=$appId")
+                setPackage("com.android.vending")
+            }
+            startActivity(intent)
+        }
+        builder.setView(customLayout)
+        // create and show the alert dialog
+        val dialog = builder.create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.show()
+    }
+
+
+
+
+
 }
